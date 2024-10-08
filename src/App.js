@@ -11,10 +11,10 @@ import QuizDisplay from './components/QuizDisplay';
 const App = () => {
     const [questions, setQuestions] = useState([]);
     const [isFormVisible, setFormVisible] = useState(false);
-    const [selectedQuestion, setSelectedQuestion] = useState(null);
+    const [selectedQuestion, setSelectedQuestion] = useState(null); // for toggling question details
     const [quizzes, setQuizzes] = useState([]);
     const [showForm, setShowForm] = useState(false);
-    const [selectedQuiz, setSelectedQuiz] = useState(null);
+    const [selectedQuiz, setSelectedQuiz] = useState(null); // for toggling quiz details
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
@@ -83,7 +83,12 @@ const App = () => {
     };
 
     const handleQuestionSelect = (question) => {
-        setSelectedQuestion(question);
+        // Toggle question details view
+        if (selectedQuestion && selectedQuestion._id === question._id) {
+            setSelectedQuestion(null); // Deselect if clicked again
+        } else {
+            setSelectedQuestion(question); // Select the clicked question
+        }
     };
 
     const handleQuizAdded = (newQuiz) => {
@@ -112,7 +117,12 @@ const App = () => {
     };
 
     const handleQuizSelect = (quiz) => {
-        setSelectedQuiz(quiz);
+        // Toggle quiz details view
+        if (selectedQuiz && selectedQuiz._id === quiz._id) {
+            setSelectedQuiz(null); // Deselect if clicked again
+        } else {
+            setSelectedQuiz(quiz); // Select the clicked quiz
+        }
     };
 
     const handleCloseSnackbar = () => {
