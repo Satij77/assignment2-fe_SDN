@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Box, Typography, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
+import Footer from './components/Footer';
+
 
 
 const App = () => {
@@ -36,7 +38,7 @@ const App = () => {
                     </Button>
                 </Box>
             </Container>
-      
+            <Footer />
         </>
     );
 };

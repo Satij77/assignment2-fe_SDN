@@ -22,7 +22,9 @@ const Header = () => {
                     </Typography>
                 </Button>
                 <Box>
-                    
+                    <Button color="inherit" component={Link} to="/">
+                        Home
+                    </Button>
                     <Button color="inherit" component={Link} to="/questions">
                         Questions
                     </Button>
