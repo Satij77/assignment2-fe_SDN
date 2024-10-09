@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, TextField, Snackbar, Alert } from '@mui/material';
+import { Button, TextField, Snackbar, Alert, Card, CardContent, Typography  } from '@mui/material';
 import '../css/QuestionForm.css'; // Import file CSS
 
 const QuestionForm = ({ onQuestionAdded }) => {
@@ -39,6 +39,12 @@ const QuestionForm = ({ onQuestionAdded }) => {
     };
 
     return (
+        <Card variant="outlined" style={{ marginBottom: '16px' }}>
+            <CardContent>
+                <Typography variant="h6" gutterBottom>
+                    Create Question
+                </Typography>
+        
         <form onSubmit={handleSubmit} className="question-form">
             <div className="form-field">
                 <TextField
@@ -80,6 +86,13 @@ const QuestionForm = ({ onQuestionAdded }) => {
                 </Alert>
             </Snackbar>
         </form>
+        </CardContent>
+        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="success">
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
+        </Card>
     );
 };
 

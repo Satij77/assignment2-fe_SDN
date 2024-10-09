@@ -1,188 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import QuestionForm from './components/QuestionForm';
-import QuestionList from './components/QuestionList';
-import QuizForm from './components/QuizForm';
-import QuizList from './components/QuizList';
-import { Container, Typography, Box, Button, Snackbar, Alert } from '@mui/material';
-import DisplayQuestion from './components/DisplayQuestion';
-import QuizDisplay from './components/QuizDisplay';
+import React from 'react';
+import { Container, Box, Typography, Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 
 const App = () => {
-    const [questions, setQuestions] = useState([]);
-    const [isFormVisible, setFormVisible] = useState(false);
-    const [selectedQuestion, setSelectedQuestion] = useState(null); // for toggling question details
-    const [quizzes, setQuizzes] = useState([]);
-    const [showForm, setShowForm] = useState(false);
-    const [selectedQuiz, setSelectedQuiz] = useState(null); // for toggling quiz details
-    const [openSnackbar, setOpenSnackbar] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
-    // Fetch all questions
-    useEffect(() => {
-        const fetchQuestions = async () => {
-            try {
-                const response = await axios.get('https://assignment1-be-sdn.onrender.com/questions');
-                setQuestions(response.data);
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-            }
-        };
-
-        fetchQuestions();
-    }, []);
-
-    // Fetch quizzes
-    useEffect(() => {
-        const fetchQuizzes = async () => {
-            try {
-                const response = await axios.get('https://assignment1-be-sdn.onrender.com/quizzes');
-                setQuizzes(response.data);
-            } catch (error) {
-                console.error('Error fetching quizzes:', error);
-            }
-        };
-
-        fetchQuizzes();
-    }, []);
-
-    const handleUpdateQuestion = async (updatedQuestion) => {
-        try {
-            await axios.put(`https://assignment1-be-sdn.onrender.com/questions/${updatedQuestion._id}`, updatedQuestion);
-            setQuestions((prevQuestions) =>
-                prevQuestions.map((question) =>
-                    question._id === updatedQuestion._id ? updatedQuestion : question
-                )
-            );
-            setSelectedQuestion(null); // Reset selected question
-            setSnackbarMessage('Question updated successfully!');
-            setSnackbarSeverity('success');
-            setOpenSnackbar(true);
-        } catch (error) {
-            console.error('Error updating question:', error);
-            setSnackbarMessage('Failed to update question.');
-            setSnackbarSeverity('error');
-            setOpenSnackbar(true);
-        }
-    };
-
-    const handleQuestionAdded = (newQuestion) => {
-        setQuestions([...questions, newQuestion]);
-        setFormVisible(false);
-        setSnackbarMessage('Question added successfully!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-    };
-
-    const handleQuestionDeleted = (deletedQuestionId) => {
-        setQuestions(questions.filter((question) => question._id !== deletedQuestionId));
-        setSnackbarMessage('Question deleted successfully!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-    };
-
-    const handleQuestionSelect = (question) => {
-        // Toggle question details view
-        if (selectedQuestion && selectedQuestion._id === question._id) {
-            setSelectedQuestion(null); // Deselect if clicked again
-        } else {
-            setSelectedQuestion(question); // Select the clicked question
-        }
-    };
-
-    const handleQuizAdded = (newQuiz) => {
-        setQuizzes((prevQuizzes) => [...prevQuizzes, newQuiz]);
-        setSnackbarMessage('Quiz added successfully!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-    };
-
-    const handleQuizUpdated = (updatedQuiz) => {
-        setQuizzes((prevQuizzes) =>
-            prevQuizzes.map((quiz) => (quiz._id === updatedQuiz._id ? updatedQuiz : quiz))
-        );
-        setSelectedQuiz(updatedQuiz);
-        setSnackbarMessage('Quiz updated successfully!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-    };
-
-    const handleQuizDeleted = (quizId) => {
-        setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz._id !== quizId));
-        setSelectedQuiz(null);
-        setSnackbarMessage('Quiz deleted successfully!');
-        setSnackbarSeverity('success');
-        setOpenSnackbar(true);
-    };
-
-    const handleQuizSelect = (quiz) => {
-        // Toggle quiz details view
-        if (selectedQuiz && selectedQuiz._id === quiz._id) {
-            setSelectedQuiz(null); // Deselect if clicked again
-        } else {
-            setSelectedQuiz(quiz); // Select the clicked quiz
-        }
-    };
-
-    const handleCloseSnackbar = () => {
-        setOpenSnackbar(false);
-    };
-
     return (
-        <Container>
-            <Box sx={{ my: 4 }}>
-                <Typography variant="h5" gutterBottom>Question Management</Typography>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={() => setFormVisible(!isFormVisible)}
-                >
-                    {isFormVisible ? 'Cancel' : 'Create New Question'}
-                </Button>
-
-                {isFormVisible && <QuestionForm onQuestionAdded={handleQuestionAdded} />}
-
-                <QuestionList 
-                    questions={questions} 
-                    onQuestionDeleted={handleQuestionDeleted} 
-                    onQuestionSelect={handleQuestionSelect} 
-                />
-                
-                {selectedQuestion && (
-                    <DisplayQuestion 
-                        question={selectedQuestion} 
-                        onUpdateQuestion={handleUpdateQuestion} 
-                    />
-                )}
-
-                <Typography variant="h4" gutterBottom>Quiz Management</Typography>
-                <Button 
-                    variant="contained" 
-                    color="primary" 
-                    onClick={() => setShowForm(!showForm)}
-                >
-                    {showForm ? 'Cancel' : 'Create Quiz'}
-                </Button>
-
-                {showForm && <QuizForm onQuizAdded={handleQuizAdded} />}
-                <QuizList quizzes={quizzes} onQuizDeleted={handleQuizDeleted} onQuizSelect={handleQuizSelect} />
-
-                {selectedQuiz && (
-                    <QuizDisplay
-                        quiz={selectedQuiz}
-                        onQuizUpdated={handleQuizUpdated}
-                        onDelete={() => handleQuizDeleted(selectedQuiz._id)}
-                    />
-                )}
-            </Box>
-
-            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
-                <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
-        </Container>
+        <>
+            
+            <Container
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '100vh',
+                    pt: 10, // Cung cấp padding top đủ để nội dung không bị dính vào header
+                    pb: 8,  // Cung cấp padding bottom để tránh dính vào footer
+                }}
+            >
+                <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" gutterBottom>
+                        Welcome to Quiz and Question Management
+                    </Typography>
+                    <Button variant="contained" color="primary" component={Link} to="/questions">
+                        Manage Questions
+                    </Button>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        component={Link}
+                        to="/quizzes"
+                        sx={{ ml: 2 }}
+                    >
+                        Manage Quizzes
+                    </Button>
+                </Box>
+            </Container>
+      
+        </>
     );
 };
 
