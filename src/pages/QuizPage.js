@@ -31,8 +31,9 @@ const QuizPage = () => {
             <QuizForm />
             <QuizList quizzes={quizzes} onQuizSelect={handleQuizSelect} />
             {selectedQuiz && <QuizDisplay quiz={selectedQuiz} />}
-            <h1>----</h1>
+            
         </Container>
+        
     );
 };
 

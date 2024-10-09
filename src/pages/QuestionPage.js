@@ -31,8 +31,9 @@ const QuestionPage = () => {
             <QuestionForm />
             <QuestionList questions={questions} onQuestionSelect={handleQuestionSelect} />
             {selectedQuestion && <DisplayQuestion question={selectedQuestion} />}
-            <h1>----</h1>
+            
         </Container>
+        
     );
 };
 
