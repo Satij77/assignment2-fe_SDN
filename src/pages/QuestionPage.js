@@ -27,10 +27,11 @@ const QuestionPage = () => {
 
     return (
         <Container>
-            <h1>Create New Question</h1>
+            <h1>----</h1>
             <QuestionForm />
             <QuestionList questions={questions} onQuestionSelect={handleQuestionSelect} />
             {selectedQuestion && <DisplayQuestion question={selectedQuestion} />}
+            <h1>----</h1>
         </Container>
     );
 };

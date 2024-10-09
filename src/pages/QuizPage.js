@@ -27,10 +27,11 @@ const QuizPage = () => {
 
     return (
         <Container>
-            <h1>Create New Quiz</h1>
+            <h1>----</h1>
             <QuizForm />
             <QuizList quizzes={quizzes} onQuizSelect={handleQuizSelect} />
             {selectedQuiz && <QuizDisplay quiz={selectedQuiz} />}
+            <h1>----</h1>
         </Container>
     );
 };
